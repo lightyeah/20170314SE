@@ -1,0 +1,93 @@
+/**
+ * Ammeter class, responsible for ammeter operation such as data reaing(voltage, current, effective power, etc.)
+ *
+ * */
+
+#ifndef AMMETER_H
+#define AMMETER_H
+#define TESTMODE
+#include <QObject>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
+#include <datapoint.h>
+#include <QTimer>
+#include <QDebug>
+
+//#define SIMULATION
+struct instruction
+{
+    QByteArray voltageInstruction;
+    QByteArray currentInstruction;
+    QByteArray effectivePowerInstruction;
+    QByteArray reactivePowerInstruction;
+    QByteArray apparentPowerInstruction;
+    QByteArray powerFactorInstruction;
+};
+
+enum readType
+{
+    NoneType=0,
+    ReadVoltage,
+    ReadCurrent,
+    ReadEffectivePower,
+    ReadReactivePower,
+    ReadApparentPower,
+    ReadPowerFactor
+};
+
+class Ammeter : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Ammeter(QObject *parent = 0);
+//    int readLatestData(DataPoint & data);//return -1 if failed
+    DataPoint getData();//get latest data from ammeter
+    bool isAmmeterFound();//电表类是否存在
+#ifdef TESTMODE
+    void changeCoeffcient(float value);
+#endif
+private:
+    void initPort();
+    void initInstruction();
+    void initConnections();
+    void initData();
+    datatype minus33(QByteArray data);
+signals:
+    void voltageDataGot();
+    void currentDataGot();
+    void effectivePowerDataGot();
+    void reactivePowerDataGot();
+    void apparentPowerDataGot();
+    void powerFactorDataGot();
+    void getDataOver();
+    void ammeterError();
+    void ammeterNotFound();
+
+public slots:
+    void parseData();
+    void startTimeoutTimer();
+    void handleTimeOut();
+    void getVoltage();
+    void getCurrent();
+    void getEffectivePower();
+    void getReactivePower();
+    void getApparentPower();
+    void getPowerFactor();
+    void startReadTimer();
+#ifndef TESTMODE
+    void connectname(QString name);//
+#endif
+private:
+    DataPoint latestData;
+    instruction m_instruction;
+    QByteArray buffer;
+    QSerialPort * portReadAndWrite;
+    readType m_readType;
+    QTimer * timeout;
+    QTimer * readTimer;
+    int failureCount;
+    float coefficient;
+    bool ammeterfound;
+};
+
+#endif // AMMETER_H
