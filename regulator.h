@@ -112,6 +112,7 @@ private:
     /*20170102 通讯*/
     QByteArray testSaving;//节电率测试
     QByteArray SavingAction;//节点动作调节
+    QByteArray tempbuffer;
     /**************/
     State r_state;//接收
     int ReSendCount;

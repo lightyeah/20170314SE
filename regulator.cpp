@@ -235,9 +235,18 @@ void Regulator::startHardware()
 */
 void Regulator::parseData()
 {
-    QByteArray tempbuffer=regulatorPort->readAll();
-    QTime *waittime = new QTime;
+    qDebug()<<"1";
+    QByteArray temp = regulatorPort->readAll();
+    qDebug()<<"2";
+    tempbuffer.append(temp);
     qDebug()<<tempbuffer;
+    if(!tempbuffer.contains("\r"))
+    {
+        return;
+    }
+    QTime *waittime = new QTime;
+
+
     if(tempbuffer.contains("OK"))
     {
        qDebug()<<type<<"before";
@@ -283,7 +292,7 @@ void Regulator::parseData()
                 qDebug()<<type<<"de";
                 break;
             }
-
+            tempbuffer.clear();
         }
 //        break;
 //    case RM_E://回复ER
@@ -333,6 +342,7 @@ void Regulator::parseData()
                 qDebug()<<"fuck data";
                 emit monitorActionEnd();//调试结束
             }
+            tempbuffer.clear();
         }
         //ET 完成节电动作
         if(tempbuffer.contains("ET"))
@@ -361,6 +371,7 @@ void Regulator::parseData()
                 break;
 
             }
+            tempbuffer.clear();
         }
 
 
