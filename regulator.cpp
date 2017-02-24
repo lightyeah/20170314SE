@@ -239,7 +239,7 @@ void Regulator::parseData()
     qDebug()<<tempbuffer;
     if(tempbuffer.contains("OK"))
     {
-       qDebug()<<"read  OK";
+       qDebug()<<"read  OK,,";
        ReSendCount = 0;//重发次数清零
        timeoutTimer->stop();//停止发送超时计时
             //waittime->restart();
