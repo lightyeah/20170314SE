@@ -156,9 +156,10 @@ void Regulator::shutDownHardware()
     testSaving = QString("42540d").toLocal8Bit();//"BT<cr>"0x42 0x54 0x0d
     testSaving = QByteArray::fromHex(testSaving);
     regulatorPort->write(testSaving);
-    timeoutTimer->start(3000);//超时3s
+    timeoutTimer->start(5000);//超时3s
     type = WaitForShutDownBack;
     qDebug()<<"BT SEND";
+    qDebug()<<type<<"after bt";
 
 }
 //发送阈值指令
@@ -192,7 +193,7 @@ void Regulator::sendThershold(int percentage, DataPoint voltage, DataPoint newDa
     SavingAction = QString("42520d").toLocal8Bit();
     SavingAction = QByteArray::fromHex(SavingAction);
     regulatorPort->write(SavingAction);
-    timeoutTimer->start(3000);//超时3s
+    timeoutTimer->start(5000);//超时3s
     type = WaitForThersholdBack;
     qDebug()<<"BR send";
 
@@ -239,6 +240,7 @@ void Regulator::parseData()
     qDebug()<<tempbuffer;
     if(tempbuffer.contains("OK"))
     {
+       qDebug()<<type<<"before";
        qDebug()<<"read  OK,,";
        ReSendCount = 0;//重发次数清零
        timeoutTimer->stop();//停止发送超时计时
@@ -247,6 +249,7 @@ void Regulator::parseData()
             switch (type)
             {
             case WaitForStartBack:
+                qDebug()<<"type start change";
                 type = IDLE;
                 //endtimeTimer->start(MAX_ENDTIMEOUT);
                 emit startBack();
@@ -259,6 +262,7 @@ void Regulator::parseData()
                 //return;
                 break;
             case WaitForSimulationBack:
+                qDebug()<<"type sim change";
                 type = IDLE;
                 emit simulationBack();
                 break;
@@ -276,6 +280,7 @@ void Regulator::parseData()
                 //sendData(MinVoltageData,NewVoltageData);
                 break;
             default:
+                qDebug()<<type<<"de";
                 break;
             }
 
@@ -350,6 +355,7 @@ void Regulator::parseData()
                     if(waittime->elapsed()>500)break;//等待500ms后读取数据
                 }
                 emit shutDownOver();
+                qDebug()<<type<<"after done";
                 break;
             default:
                 break;
