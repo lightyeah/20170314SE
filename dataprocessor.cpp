@@ -230,6 +230,14 @@ void DataProcessor::connectammeter(QString ammetername)
 {
     ammeter->connectname(ammetername);
 }
+/**
+ * @brief DataProcessor::setAmmetercoef
+ * @param coef
+ */
+void DataProcessor::setAmmetercoef(float coef)
+{
+    ammeter->setCoefficient(coef);
+}
 #endif
 void DataProcessor::connectregulator(QString regulatorname)
 {

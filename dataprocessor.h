@@ -48,6 +48,7 @@ public slots:
     void dataStartWork();//开始计时工作
 #ifndef TESTMODE
     void connectammeter(QString ammetername);//连接电表
+    void setAmmetercoef(float coef);//设置电流互感参数
 #endif
     void connectregulator(QString regulatorname);//连接下位机
 

@@ -474,6 +474,15 @@ void Ammeter::connectname(QString name)
     return;
 
 }
+/**
+ * @brief Ammeter::setCoefficient
+ * @param coef
+ */
+void Ammeter::setCoefficient(float coef)
+{
+    coefficient = coef;
+    //qDebug()<<"coef"<<coef;
+}
 
 #else
 double random(double start, double end)

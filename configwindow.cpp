@@ -25,12 +25,17 @@ void ConfigWindow::UIsetting()
     workModeBox = new QComboBox(this);
     QLabel *monitertimeintervallabel = new QLabel(this);
     moniterTimeIntervalBox = new QComboBox(this);
+    QLabel *coeffientlabel = new QLabel(this);
+    coeffientSlider = new QSlider(this);
+    coeffientSpinbox = new QSpinBox(this);
     systemmodelabel->setText(tr("系统配置： "));
     systemmodelabel->adjustSize();
     workmodelabel->setText(tr("工作模式： "));
     workmodelabel->adjustSize();
     monitertimeintervallabel->setText(tr("监控计时：(min)"));
     monitertimeintervallabel->adjustSize();
+    coeffientlabel->setText(tr("互感系数： "));
+    coeffientlabel->adjustSize();
     systemModeBox->addItem("windows");
     systemModeBox->addItem("linux");
     workModeBox->addItem("normal");
@@ -40,6 +45,16 @@ void ConfigWindow::UIsetting()
     moniterTimeIntervalBox->addItem(tr("10"));
     moniterTimeIntervalBox->addItem(tr("30"));
     moniterTimeIntervalBox->addItem(tr("100"));
+    coeffientSlider->setOrientation(Qt::Horizontal);
+    coeffientSlider->setMinimum(0);
+    coeffientSlider->setMaximum(500);
+    coeffientSlider->setSingleStep(1);
+    coeffientSpinbox->setMinimum(0);
+    coeffientSpinbox->setMaximum(500);
+    coeffientSpinbox->setSingleStep(1);
+    //coeffientSlider->setTickInterval(100);
+    coeffientSlider->setValue(300);
+    coeffientSpinbox->setValue(300);
     done = new QPushButton(this);
     done->setText(tr("done!"));
     QGridLayout *mainLayout = new QGridLayout;
@@ -53,6 +68,10 @@ void ConfigWindow::UIsetting()
     line+=1;row=0;
     mainLayout->addWidget(monitertimeintervallabel,line,row);row+=1;
     mainLayout->addWidget(moniterTimeIntervalBox,line,row);row+=1;
+    line+=1;row=0;
+    mainLayout->addWidget(coeffientlabel,line,row);row+=1;
+    mainLayout->addWidget(coeffientSlider,line,row);row+=1;
+    mainLayout->addWidget(coeffientSpinbox,line,row);row+=1;
     line+=1;row=0;
     row = 1;
     mainLayout->addWidget(done,line,row);row += 1;
@@ -69,6 +88,10 @@ void ConfigWindow::connectsetting()
     QObject::connect(systemModeBox,SIGNAL(currentTextChanged(QString)),this,SLOT(systemModeBoxChanged(QString)));
     QObject::connect(workModeBox,SIGNAL(currentTextChanged(QString)),this,SLOT(workModeBoxChanged(QString)));
     QObject::connect(moniterTimeIntervalBox,SIGNAL(currentTextChanged(QString)),this,SLOT(moniterTimeIntervalBoxChanged(QString)));
+    QObject::connect(coeffientSlider,SIGNAL(valueChanged(int)),coeffientSpinbox,SLOT(setValue(int)));
+    QObject::connect(coeffientSpinbox,SIGNAL(valueChanged(int)),coeffientSlider,SLOT(setValue(int)));
+    QObject::connect(coeffientSlider,SIGNAL(valueChanged(int)),this,SLOT(coeffientChanged(int)));
+
 }
 /*
  * 确认配置完成
@@ -79,6 +102,7 @@ void ConfigWindow::doneButtonClicked()
     emit workModeSet(workMode);
     emit moniterTimeIntervalSet(monitorTimeInterval);
     emit setDone();
+    emit coeffientSet(coeffient);
     this->hide();//隐藏配置窗口
     this->setWindowFlags(Qt::Widget);
 }
@@ -121,4 +145,13 @@ void ConfigWindow::moniterTimeIntervalBoxChanged(QString tt)
 {
     monitorTimeInterval = tt.toInt();
 
+}
+/**
+ * @brief ConfigWindow::coeffientChanged
+ * @param coef
+ */
+void ConfigWindow::coeffientChanged(int coef)
+{
+
+   coeffient = coef;
 }

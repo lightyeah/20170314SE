@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(configWin,SIGNAL(workModeSet(uint)),this,SLOT(setWorkMode(uint)));
     QObject::connect(configWin,SIGNAL(moniterTimeIntervalSet(uint)),this,SLOT(setMonitorTimeInterval(uint)));
     QObject::connect(configWin,SIGNAL(setDone()),this,SLOT(Initall()));
+    QObject::connect(configWin,SIGNAL(coeffientSet(uint)),this,SLOT(setCoeffient(uint)));
     connect(testWin,&TestWindow::testButtonClicked,&dataPro,&DataProcessor::testAction);
     connect(&dataPro,&DataProcessor::sendTestResult,testWin,&TestWindow::getResult);
     connect(&dataPro,&DataProcessor::monitorBegun,this,&MainWindow::disableTestWindow);
@@ -231,6 +232,7 @@ void MainWindow::setWorkMode(unsigned int workmode)
 #ifndef TESTMODE
 #define TESTMODE
 #endif
+
     }
 }
 /**
@@ -241,8 +243,21 @@ void MainWindow::setMonitorTimeInterval(unsigned int tt)
 {
     dataPro.setTimeInterval(3,tt);
 }
+/**
+ * @brief MainWindow::setCoeffient
+ * @param coef
+ */
+void MainWindow::setCoeffient(unsigned int coef)
+{
+    dataPro.setAmmetercoef((float)coef);
+}
 
 bool MainWindow::isError()
 {
     return Error;
+}
+
+void MainWindow::on_pushButton_4_clicked(bool checked)
+{
+    configWin->show();
 }

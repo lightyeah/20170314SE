@@ -41,6 +41,8 @@ private slots:
     void refreshportClicked();//刷新端口
     void Initall();
 
+    void on_pushButton_4_clicked(bool checked);
+
 private:
     Ui::MainWindow *ui;
     RealTimeDataWindow* realTimeWin;
@@ -60,6 +62,7 @@ public slots:
     void setSystemMode(unsigned int systemmode);//系统参数设置
     void setWorkMode(unsigned int workmode);//工作模式参数设置
     void setMonitorTimeInterval(unsigned int tt);//设置监控时间
+    void setCoeffient(unsigned int coef);//设置互感系数
     bool isError();
 
 signals:

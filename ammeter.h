@@ -5,7 +5,7 @@
 
 #ifndef AMMETER_H
 #define AMMETER_H
-#define TESTMODE
+//#define TESTMODE
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
@@ -76,6 +76,7 @@ public slots:
     void startReadTimer();
 #ifndef TESTMODE
     void connectname(QString name);//
+    void setCoefficient(float coef);//设置互感比
 #endif
 private:
     DataPoint latestData;
